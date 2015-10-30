@@ -28,9 +28,13 @@ The new Dreamfactory2.0 is just out of beta (as in yesterday to when this file w
 8. Setup Dreamfactory by running the following commands, during which it will ask for github token and admin credentials, just follow the promoted instructions:
 
 	export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
+	
 	alias php='~/app-root/runtime/bin/php'
+	
 	cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory
+	
 	php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
+	
 	php artisan dreamfactory:setup
 
 9. Your Dreamfactory2.0 is up and running, goto your app's url to use it.
