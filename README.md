@@ -18,7 +18,7 @@ The new Dreamfactory2.0 is just out of beta (as in yesterday to when this file w
 1. Goto OpenShift web console
 2. Create a new app with DIY cartridge, the source put:   https://github.com/hkhako/OS_Dreamfactory2.0.git
 3. After the app is created, goto the OpenShift web console and add mysql5.5 cartridge
-4. Goto your app's url, that is:  https://<app>-<account>.rhcloud.com
+4. Goto your app's url, that is:  https://"<"app">"-"<"account">".rhcloud.com
 5. Click "Run installation script" link at the bottom of page
 6. Wait for 40+ minutes
 
