@@ -1,49 +1,41 @@
-<<<<<<< HEAD
+
 # OS_Dreamfactory2.0
 RedHat OpenShift - DIY Dreamfactory 2.0 Cartridge
 =======
-# PHP5.5 + Apache 
+### Acknowledgment
 
-This modified DIY cartridge provides newer PHP and freer Apache configuration, which can be found in `conf/httpd.conf` folder.
+This project is based on laobubu's php installation script: https://github.com/laobubu/openshift-php5.5-cgi-apache
 
-## Quick Start
+### Introduction
+Dreamfactory 2.0 require PHP 5.5, which is not in the list of OpenShift pre-made Cartridges, so I have to DIY.  The process isn't smooth at all, took me a week or two to find solutions to all issues.  Many errors had occured and dependency missing during the process.  Hope you find this DIY cartridge useful.  
 
-### Easiest Way
+### Requirment
+1. OpenShift account, goto http://openshift.redhat.com
+2. Github account, goto https://github.com
 
-1. Open https://openshift.redhat.com/app/console/application_type/cart!diy-0.1 
-2. Fill **Source Code** text field: `https://github.com/hkhako/OS_Dreamfactory2.0.git`
-3. Click **Create Application** and wait
-4. After creating the app, visit your app (e.g. https://foo-bar.rhcloud.com/ )
-5. Click the last link.
-6. Wait for ~1 hour and then PHP will be ready.
-7. Git clone your OpenShift App and modify.
+### Installation - Build PHP and Dreamfactory
 
-### Cool Way
+1. Goto OpenShift web console
+2. Create a new app with DIY cartridge, the source put:   https://github.com/hkhako/OS_Dreamfactory2.0.git
+3. After the app is created, goto the OpenShift web console and add mysql5.5 cartridge
+4. Goto your app's url, that is:  https://<app>-<account>.rhcloud.com
+5. Click "Run installation script" link at the bottom of page
+6. Wait for 40+ minutes
 
-1. Push the content of this repo to your OpenShift. *(Read Tips if you are using Windows)*
-2. Access your app's URL like https://foo-bar.rhcloud.com
-3. Click the Link.
-4. Wait (Yes! It's slow!!!) , or do anything you want.
+### Installation - Configure Dreamfactory
 
-### Old School
+7. SSH to your app,  the SSH command can be found at your ( OpenShift Web Console ) > <Your APP> > click "Want to log in to your application?"  >  A new box with the command will appears
+8. Setup Dreamfactory by running the following commands, during which it will ask for github token and credentials to a create admin account:
 
-1. Push the content of this repo to your OpenShift. *(Read Tips if you are using Windows)*
-2. Access SSH and Run `chmod +x ${OPENSHIFT_REPO_DIR}/misc/make.sh && nohup ${OPENSHIFT_REPO_DIR}/misc/make.sh > /tmp/makephp&`
-3. Give your family/friend a ring or watch a movie.
-4. Do what you want.
+	export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
+	alias php='~/app-root/runtime/bin/php'
+	cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory
+	php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
+	php artisan dreamfactory:setup
 
-### Tips
+9. Your Dreamfactory2.0 is up and running, goto your app's url to use it.
 
-* You can also choose other version of PHP by editing `misc/make.sh` before making.
-* Once you modified `conf/httpd.conf`, you must reload your app, or run `${OPENSHIFT_REPO_DIR}/.openshift/action_hooks/reload`, to make it works.
-* If you are using Windows, the permission information might be lost. To avoid the problem, you can try this in Git Bash:
-```
-git clone https://github.com/laobubu/openshift-php5.5-cgi-apache.git --depth 1
-cd openshift-php5.5-cgi-apache
-git remote set-url origin ssh://xxxxxxxxxxx@foo-bar.rhcloud.com/xxxxxxx #replace this
-git push origin -f
-#since then, the repo is yours and do whatever you want.
-```
-* The OpenShift `diy` cartridge documentation can be found at:
-http://openshift.github.io/documentation/oo_cartridge_guide.html#diy
->>>>>>> 4d250d4e94ba181803160780a76197d39157ec64
+
+### Note
+
+Sorry that you have to SSH to OpenShift to configure Dreamfactory. I tried to avoid that, but github require authentication to complete 'composer install'.  During 'composer install'  it will ask you for github token.  Just follow the link in a brower and login.  It will then returns a token which you can copy.

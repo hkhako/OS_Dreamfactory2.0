@@ -58,31 +58,25 @@ ln -s $OPENSHIFT_DATA_DIR/composer/bin/composer $OPENSHIFT_DATA_DIR/bin/composer
 	
 	
 cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo
-git pull https://github.com/dreamfactorysoftware/dreamfactory.git dreamfactory
+mkdir dreamfactory
 cd dreamfactory
+git init
+git pull https://github.com/dreamfactorysoftware/dreamfactory.git
 mkdir bootstrap/cache
 chmod -R 2775 bootstrap/cache
 chmod -R 2775 storage
 
-export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
-alias php='~/app-root/runtime/bin/php'
-
-php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
-
-
-sed -i 's/"DB_DRIVER="/DB_DRIVER=mysql/g' .env-dist
-sed -i 's/"DB_HOST="/DB_HOST=${OPENSHIFT_MYSQL_DB_HOST}/g' .env-dist
-sed -i 's/"DB_PORT="/DB_PORT=${OPENSHIFT_MYSQL_DB_PORT}/g' .env-dist
-sed -i 's/"DB_USERNAME="/DB_USERNAME=${OPENSHIFT_MYSQL_DB_USERNAME}/g' .env-dist
-sed -i 's/"DB_PASSWORD="/DB_PASSWORD=${OPENSHIFT_MYSQL_DB_PASSWORD}/g' .env-dist
-sed -i 's/"DB_DATABASE="/DB_DATABASE=${OPENSHIFT_APP_NAME}/g' .env-dist
+sed -i '/DB_DRIVER=/ c\DB_DRIVER=mysql' .env-dist
+sed -i '/DB_HOST=/ c\DB_HOST='$OPENSHIFT_MYSQL_DB_HOST'' .env-dist
+sed -i '/DB_PORT=/ c\DB_PORT='$OPENSHIFT_MYSQL_DB_PORT'' .env-dist
+sed -i '/DB_USERNAME=/ c\DB_USERNAME='$OPENSHIFT_MYSQL_DB_USERNAME'' .env-dist
+sed -i '/DB_PASSWORD=/ c\DB_PASSWORD='$OPENSHIFT_MYSQL_DB_PASSWORD'' .env-dist
+sed -i '/DB_DATABASE=/ c\DB_DATABASE='$OPENSHIFT_APP_NAME'' .env-dist
 
 cp .env-dist .env
-php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
-
-
-popd
 
 cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo
+
 rm -f -r www
+
 ln -s ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory/public www
