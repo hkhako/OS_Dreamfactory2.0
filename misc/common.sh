@@ -10,8 +10,10 @@ export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
 
 alias php='${OPENSHIFT_HOMEDIR}/app-root/runtime/bin/php'
 
-cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo
+cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory
 
 php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
+
+cd ..
 
 env|>${OPENSHIFT_TMP_DIR}/httpd_temp.conf awk 'BEGIN{FS="="} $1 ~ /^OPENSHIFT/ {print "PassEnv", $1}'
