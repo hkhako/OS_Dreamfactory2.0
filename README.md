@@ -1,15 +1,15 @@
 
-# OS_Dreamfactory2.0
-RedHat OpenShift - DIY Dreamfactory 2.0 Cartridge
+##RedHat OpenShift - DIY Dreamfactory 2.0 Cartridge
 =======
 ### Acknowledgment
 
 This project is based on laobubu's php installation script: https://github.com/laobubu/openshift-php5.5-cgi-apache
 
 ### Introduction
-Dreamfactory 2.0 require PHP 5.5, which is not in the list of OpenShift pre-made Cartridges, so I have to DIY.  The process isn't smooth at all, took me a week or two to find solutions to all issues.  Many errors had occured and dependency missing during the process.  Hope you find this DIY cartridge useful.  
+The new Dreamfactory2.0 is just out of beta (as in yesterday to when this file was written).  The new 2.0 added OAuth services which are very useful.  I had been trying to install 2.0 beta to OpenShift.  However, it requires PHP 5.5, which is not in the list of OpenShift pre-made Cartridges.  So, I decided to DIY.  The process isn't smooth at all, took me a week or two to find solutions to all issues.  Many errors had occured and dependency missing during the process.  Hope you find this DIY cartridge useful.  
 
 ### Requirment
+
 1. OpenShift account, goto http://openshift.redhat.com
 2. Github account, goto https://github.com
 
@@ -25,7 +25,7 @@ Dreamfactory 2.0 require PHP 5.5, which is not in the list of OpenShift pre-made
 ### Installation - Configure Dreamfactory
 
 7. SSH to your app,  the SSH command can be found at your ( OpenShift Web Console ) > <Your APP> > click "Want to log in to your application?"  >  A new box with the command will appears
-8. Setup Dreamfactory by running the following commands, during which it will ask for github token and credentials to a create admin account:
+8. Setup Dreamfactory by running the following commands, during which it will ask for github token and admin credentials, just follow the promoted instructions:
 
 	export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
 	alias php='~/app-root/runtime/bin/php'
