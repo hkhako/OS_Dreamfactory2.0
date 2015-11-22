@@ -31,7 +31,7 @@ function install_php() {
             --with-pdo-mysql \
             --with-pdo-pgsql \
             --with-openssl \
-			--with-mongo \
+			--with-mongodb \
             --with-xmlrpc \
             --with-xsl \
             --with-bz2 \
