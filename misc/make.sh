@@ -66,6 +66,7 @@ mkdir bootstrap/cache
 chmod -R 2775 bootstrap/cache
 chmod -R 2775 storage
 
+chmod 2775 .env-dist
 sed -i '/DB_DRIVER=/ c\DB_DRIVER=mysql' .env-dist
 sed -i '/DB_HOST=/ c\DB_HOST='$OPENSHIFT_MYSQL_DB_HOST'' .env-dist
 sed -i '/DB_PORT=/ c\DB_PORT='$OPENSHIFT_MYSQL_DB_PORT'' .env-dist
