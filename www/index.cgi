@@ -40,7 +40,7 @@ elif [[ -f ${OPENSHIFT_RUNTIME_DIR}/tmp/make_log ]]; then
 	echo "<p>Still spawning your world...</p>"
 	echo "<p>This page shall refresh automatically.</p>"
 	echo "<p>Come back in around an hour.</p>"
-	tail -1000 ${OPENSHIFT_RUNTIME_DIR}/tmp/make_log
+	nl2br( tail -1000 ${OPENSHIFT_RUNTIME_DIR}/tmp/make_log )
 	echo "</pre>"
 	echo "<script>setTimeout(function(){window.location.reload(true)},10000)</script>"
 else

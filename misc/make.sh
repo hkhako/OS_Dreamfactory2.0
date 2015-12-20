@@ -26,7 +26,7 @@ mkdir tmp
 cd tmp
 
 
-				
+# Build libmcrypt		
 wget http://downloads.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz
 tar -zxf libmcrypt-2.5.8.tar.gz
 cd libmcrypt-2.5.8
@@ -39,6 +39,25 @@ rm -f -r libmcrypt-2.5.8
 rm -r $OPENSHIFT_RUNTIME_DIR/tmp/*.tar.gz
 
 
+
+#wget ftp://ftp.dvo.ru/pub/cygwin/64bit/release/cyrus-sasl/libsasl2-devel/libsasl2-devel-2.1.26-4.tar.bz2
+#tar -jxf libsasl2-devel-2.1.26-4.tar.bz2
+#cd libsasl2-devel-2.1.26-4
+
+#cd ..
+
+#cp -f ../repo/misc/files/mongodb.* ${OPENSHIFT_RUNTIME_DIR}/srv/mongodb
+
+# Build PHP
+pushd ${OPENSHIFT_REPO_DIR}/misc
+chmod +x make_php
+source make_php
+check_php
+export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
+alias php='${OPENSHIFT_HOMEDIR}/app-root/runtime/bin/php'
+
+
+# Build SASL
 wget ftp://ftp.cyrusimap.org/cyrus-sasl/cyrus-sasl-2.1.26.tar.gz
 tar -zxf cyrus-sasl-2.1.26.tar.gz
 cd cyrus-sasl-2.1.26
@@ -49,38 +68,26 @@ export MONGODB_SASL=${OPENSHIFT_RUNTIME_DIR}/srv/libsasl2
 export SASL_PATH=${OPENSHIFT_RUNTIME_DIR}/srv/libsasl2
 cd ..
 
-#wget ftp://ftp.dvo.ru/pub/cygwin/64bit/release/cyrus-sasl/libsasl2-devel/libsasl2-devel-2.1.26-4.tar.bz2
-#tar -jxf libsasl2-devel-2.1.26-4.tar.bz2
-#cd libsasl2-devel-2.1.26-4
-
-#cd ..
-
-
-
+# Build MongoDB Driver
+pushd ${OPENSHIFT_RUNTIME_DIR}/tmp
 git clone https://github.com/mongodb/mongo-php-driver.git phongo
 cd phongo
 git submodule update --init
+mkdir include
 mkdir ./include/sasl
 cp $SASL_PATH/include/sasl/*.* ./include/sasl
 cp -f ../../repo/misc/file/sasl.h ./include/sasl/sasl.h
+phpize
 ./configure \
 --prefix=$OPENSHIFT_RUNTIME_DIR/srv/mongodb \
 --enable-developer-flags \
 --with-mongodb-sasl=$SASL_PATH
 make -j8 all
 cp ./modules/*.* ../../srv/mongodb
-
 cd..
-
 rm -f -r phongo
 
-
-pushd ${OPENSHIFT_REPO_DIR}/misc
-
-chmod +x make_php
-source make_php
-check_php
-
+# Build Composer
 export COMPOSER_HOME="${OPENSHIFT_DATA_DIR}.composer"
 echo $COMPOSER_HOME > ${OPENSHIFT_HOMEDIR}.env/user_vars/COMPOSER_HOME
 echo "Installing composer"
