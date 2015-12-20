@@ -20,6 +20,7 @@ function install_php() {
             --with-config-file-scan-dir=${CONF_DIR}/php5/conf.d/ \
             --with-layout=PHP \
 			--with-mcrypt=$OPENSHIFT_RUNTIME_DIR/srv/libmcrypt \
+			--with-mongodb=$OPENSHIFT_RUNTIME_DIR/srv/mongodb \
             --with-curl \
             --with-pear \
             --with-gd \
@@ -31,7 +32,6 @@ function install_php() {
             --with-pdo-mysql \
             --with-pdo-pgsql \
             --with-openssl \
-            --with-mongodb \
             --with-xmlrpc \
             --with-xsl \
             --with-bz2 \
