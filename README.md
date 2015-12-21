@@ -36,10 +36,22 @@ The new Dreamfactory2.0 is just out of beta (as in yesterday to when this file w
 	php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
 	
 	php artisan dreamfactory:setup
+	
+	<Enter your admin credentials>
 
 9. Your Dreamfactory2.0 is up and running, goto your app's url to use it.
 
 
 ### Note
 
-Sorry that you have to SSH to OpenShift to configure Dreamfactory. I tried to avoid that, but github require authentication to complete 'composer install'.  During 'composer install'  it will ask you for github token.  Just follow the link in a brower and login.  It will then returns a token which you can copy.
+Sometimes the SQL parameters are not set in the /dreamfactory/.env file, despite the installation script has the instructions.  If that is the case, you will need to run the following commands with SSH:
+	chmod -R 2777 .env-dist
+	sed -i '/DB_DRIVER=/ c\DB_DRIVER=mysql' .env-dist
+	sed -i '/DB_HOST=/ c\DB_HOST='$OPENSHIFT_MYSQL_DB_HOST'' .env-dist
+	sed -i '/DB_PORT=/ c\DB_PORT='$OPENSHIFT_MYSQL_DB_PORT'' .env-dist
+	sed -i '/DB_USERNAME=/ c\DB_USERNAME='$OPENSHIFT_MYSQL_DB_USERNAME'' .env-dist
+	sed -i '/DB_PASSWORD=/ c\DB_PASSWORD='$OPENSHIFT_MYSQL_DB_PASSWORD'' .env-dist
+	sed -i '/DB_DATABASE=/ c\DB_DATABASE='$OPENSHIFT_APP_NAME'' .env-dist
+	cp .env-dist .env
+	chmod -R 0600 .env-dist
+	chmod -R 0600 .env
