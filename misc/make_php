@@ -21,6 +21,7 @@ function install_php() {
             --with-layout=PHP \
 			--with-mcrypt=$OPENSHIFT_RUNTIME_DIR/srv/libmcrypt \
             --with-curl \
+            --with-pecl \
             --with-pear \
             --with-gd \
             --with-zlib \

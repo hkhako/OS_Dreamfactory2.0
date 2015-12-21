@@ -58,6 +58,7 @@ alias php='${OPENSHIFT_HOMEDIR}/app-root/runtime/bin/php'
 
 
 # Build SASL
+pushd ${OPENSHIFT_RUNTIME_DIR}/tmp
 wget ftp://ftp.cyrusimap.org/cyrus-sasl/cyrus-sasl-2.1.26.tar.gz
 tar -zxf cyrus-sasl-2.1.26.tar.gz
 cd cyrus-sasl-2.1.26
@@ -67,25 +68,42 @@ make && make install
 export MONGODB_SASL=${OPENSHIFT_RUNTIME_DIR}/srv/libsasl2
 export SASL_PATH=${OPENSHIFT_RUNTIME_DIR}/srv/libsasl2
 cd ..
+rm -f -r *.tar.gz
+rm -f -r cyrus-sasl-2.1.26
 
-# Build MongoDB Driver
+
+# Build Mongo Driver
 pushd ${OPENSHIFT_RUNTIME_DIR}/tmp
-git clone https://github.com/mongodb/mongo-php-driver.git phongo
-cd phongo
-git submodule update --init
-mkdir include
-mkdir ./include/sasl
-cp $SASL_PATH/include/sasl/*.* ./include/sasl
-cp -f ../../repo/misc/file/sasl.h ./include/sasl/sasl.h
+git clone https://github.com/mongodb/mongo-php-driver-legacy.git mongo
+cd mongo
 phpize
 ./configure \
 --prefix=$OPENSHIFT_RUNTIME_DIR/srv/mongodb \
 --enable-developer-flags \
 --with-mongodb-sasl=$SASL_PATH
 make -j8 all
-cp ./modules/*.* ../../srv/mongodb
+cp -f -v ./modules/*.* ../../srv/mongodb
 cd..
-rm -f -r phongo
+rm -f -r mongo
+
+# Build MongoDB Driver
+pushd ${OPENSHIFT_RUNTIME_DIR}/tmp
+git clone https://github.com/mongodb/mongo-php-driver.git mongodb
+cd mongodb
+git submodule update --init
+mkdir include
+mkdir ./include/sasl
+cp $SASL_PATH/include/sasl/*.* ./include/sasl
+cp -f -v ../../repo/misc/file/sasl.h ./include/sasl/sasl.h
+phpize
+./configure \
+--prefix=$OPENSHIFT_RUNTIME_DIR/srv/mongodb \
+--enable-developer-flags \
+--with-mongodb-sasl=$SASL_PATH
+make -j8 all
+cp -f -v ./modules/*.* ../../srv/mongodb
+cd..
+rm -f -r mongodb
 
 # Build Composer
 export COMPOSER_HOME="${OPENSHIFT_DATA_DIR}.composer"
@@ -124,8 +142,7 @@ chmod -R 0600 .env
 export PHPRC=${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/conf/php5/php.ini
 
 cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo
-rm -f -r www
-ln -s ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory/public www
+
 cd dreamfactory
 chmod 2755 composer.json
 sed -i '/dist/ c\  "preferred-install": "source"' composer.json
