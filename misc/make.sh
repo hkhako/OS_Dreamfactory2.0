@@ -121,18 +121,15 @@ sed -i '/DB_DATABASE=/ c\DB_DATABASE='$OPENSHIFT_APP_NAME'' .env-dist
 cp .env-dist .env
 chmod -R 0600 .env-dist
 chmod -R 0600 .env
+export PHPRC=${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/conf/php5/php.ini
 
 cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo
-
 rm -f -r www
-
 ln -s ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory/public www
-
 cd dreamfactory
-chmod -R 2755 composer.json
+chmod 2755 composer.json
 sed -i '/dist/ c\  "preferred-install": "source"' composer.json
-chmod -R 0700 composer.json
-
+chmod 0700 composer.json
 php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
 
 

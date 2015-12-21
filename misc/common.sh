@@ -8,6 +8,8 @@ export OPENSHIFT_RUNTIME_DIR=${OPENSHIFT_HOMEDIR}/app-root/runtime
 
 export PATH=${OPENSHIFT_HOMEDIR}/app-root/runtime/bin:$PATH
 
+export PHPRC=${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/conf/php5/php.ini
+
 alias php='${OPENSHIFT_HOMEDIR}/app-root/runtime/bin/php'
 
 cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory

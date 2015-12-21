@@ -5,8 +5,8 @@ if [[ "$QUERY_STRING" =~ "phpinfo" ]]; then
 	echo "<?php phpinfo();unlink('${PHPINFO_FILE}'); ?>" > ${PHPINFO_FILE}
 	echo "Location: ./${PHPINFO_FILE}
 
-<a href='${PHPINFO_FILE}'>Click to visit ${PHPINFO_FILE}</a>"
-	exit
+<a href='${PHPINFO_FILE}' target="_blank">Click to check ${PHPINFO_FILE}</a>"
+
 fi
 
 if [[ "$QUERY_STRING" =~ "doitnow" ]]; then
@@ -16,6 +16,12 @@ if [[ "$QUERY_STRING" =~ "doitnow" ]]; then
 	echo "Location: ./?working
 
 <a href='./?working'>Click to refresh</a>"
+fi
+
+if [[ "$QUERY_STRING" =~ "finalize" ]]; then
+	chmod +x ${OPENSHIFT_REPO_DIR}/misc/finalize.sh
+	nohup ${OPENSHIFT_REPO_DIR}/misc/finalize.sh > /tmp/finalize_log &
+	sleep 1
 fi
 
 cd ../..
@@ -35,7 +41,15 @@ X-Powered-By: /bin/bash
 <p>"
 
 if [[ -x ${OPENSHIFT_RUNTIME_DIR}/bin/php-cgi ]]; then
-	echo "Start coding or test <a href=\"?phpinfo\">phpinfo</a>. <b>Remember to remove index.cgi</b>"
+	echo "Test condition <a href=\"?phpinfo\">phpinfo</a>. "
+	echo "<script>setTimeout(function(){window.location.reload(true)},10000)</script>"
+	
+	if [[ -x ${OPENSHIFT_RUNTIME_DIR}/repo/www/index.cgi ]]; then
+		echo "<p><a href=?finalize>Click here to finalize and remove index.cgi</a><p>"
+
+	else
+		echo "Finalized"
+	fi
 elif [[ -f /tmp/make_log ]]; then
 	echo "<p>Still spawning your world...</p>"
 	echo "<p>This page shall refresh automatically.</p>"
