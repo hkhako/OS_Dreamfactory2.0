@@ -11,7 +11,7 @@ fi
 
 if [[ "$QUERY_STRING" =~ "doitnow" ]]; then
 	chmod +x ${OPENSHIFT_REPO_DIR}/misc/make.sh
-	nohup ${OPENSHIFT_REPO_DIR}/misc/make.sh > ${OPENSHIFT_RUNTIME_DIR}/tmp/make_log &
+	nohup ${OPENSHIFT_REPO_DIR}/misc/make.sh > /tmp/make_log &
 	sleep 1
 	echo "Location: ./?working
 
@@ -36,11 +36,12 @@ X-Powered-By: /bin/bash
 
 if [[ -x ${OPENSHIFT_RUNTIME_DIR}/bin/php-cgi ]]; then
 	echo "Start coding or test <a href=\"?phpinfo\">phpinfo</a>. <b>Remember to remove index.cgi</b>"
-elif [[ -f ${OPENSHIFT_RUNTIME_DIR}/tmp/make_log ]]; then
+elif [[ -f /tmp/make_log ]]; then
 	echo "<p>Still spawning your world...</p>"
 	echo "<p>This page shall refresh automatically.</p>"
 	echo "<p>Come back in around an hour.</p>"
-	nl2br( tail -1000 ${OPENSHIFT_RUNTIME_DIR}/tmp/make_log )
+	echo "<pre style='font-size:.7em;word-break:break-all;font-family:Courier'>"
+	tail -1000 /tmp/make_log
 	echo "</pre>"
 	echo "<script>setTimeout(function(){window.location.reload(true)},10000)</script>"
 else
