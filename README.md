@@ -13,7 +13,7 @@ The new Dreamfactory2.0 is just out of beta (as in yesterday to when this file w
 OpenShift account, goto http://openshift.redhat.com
 
 ### Installation
-##Build PHP and Dreamfactory
+#### Build PHP and Dreamfactory
 
 1. Goto OpenShift web console
 2. Create a new app with DIY cartridge, the source put:   https://github.com/hkhako/OS_Dreamfactory2.0.git
@@ -24,7 +24,7 @@ OpenShift account, goto http://openshift.redhat.com
 6. Wait for 40+ minutes
 7. Click "Finalize", which will run scripts to remove the index.cgi, and link the dreamfactory public folder to "www".
 
-## Installation - Configure Dreamfactory
+### Installation - Configure Dreamfactory
 
 7. SSH to your app,  the SSH command can be found at your ( OpenShift Web Console ) > <Your APP> > click "Want to log in to your application?"  >  A new box with the command line will appear
 8. Setup Dreamfactory by running the following commands, during which it will ask for github token and admin credentials, just follow the promoted instructions:
