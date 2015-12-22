@@ -83,7 +83,7 @@ phpize
 --with-mongodb-sasl=$SASL_PATH
 make -j8 all
 cp -f -v ./modules/*.* ../../srv/mongodb
-cd..
+cd ..
 rm -f -r mongo
 
 # Build MongoDB Driver
