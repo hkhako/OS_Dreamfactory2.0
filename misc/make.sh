@@ -19,7 +19,9 @@ cd $OPENSHIFT_RUNTIME_DIR
 mkdir srv
 mkdir srv/libmcrypt
 mkdir srv/mongodb
-
+mkdir srv/v8js
+mkdir srv/v8js/include
+mkdir srv/v8js/lib
 mkdir srv/libsasl2
 #mkdir srv/libsasl2-devel-2.1.26-4
 mkdir tmp
@@ -104,6 +106,37 @@ make -j8 all
 cp -f -v ./modules/*.* ../../srv/mongodb
 cd..
 rm -f -r mongodb
+
+
+# Build V8JS php driver
+pushd ${OPENSHIFT_RUNTIME_DIR}/tmp
+
+git clone https://github.com/v8/v8
+cd v8
+git checkout tags/3.15.4
+make dependencies
+svn checkout --force http://gyp.googlecode.com/svn/trunk build/gyp --revision 1501
+make native library=shared
+
+pushd ${OPENSHIFT_RUNTIME_DIR}/tmp/v8
+cp -f -v ./v8/include/v* ${OPENSHIFT_RUNTIME_DIR}/srv/v8js/include/
+
+cp -f -v ./
+cp -f -v ./out/native/lib.target/libv8.so ../../srv/v8js/lib/libv8.so
+
+
+pushd ${OPENSHIFT_RUNTIME_DIR}/tmp/
+wget https://pecl.php.net/get/v8js-0.1.3.tgz
+tar -zxf v8js-0.1.3.tgz
+cd v8js-0.1.3
+phpize
+./configure  --with-v8js=${OPENSHIFT_RUNTIME_DIR}/srv/v8js
+sed -i '1s/^/#define PHP_V8_VERSION "0.1.3" \n/' v8js.cc
+make
+make test
+cp ./modules/* ../../srv/v8js/
+
+
 
 # Build Composer
 export COMPOSER_HOME="${OPENSHIFT_DATA_DIR}.composer"
