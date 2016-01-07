@@ -15,7 +15,7 @@ OpenShift account, goto http://openshift.redhat.com
 ### Installation
 #### Build PHP and Dreamfactory
 
-1. Goto OpenShift web console
+1. Goto OpenShift Online Portal [openshift.redhat.com]
 2. Create a new app with DIY cartridge, the source put:   https://github.com/hkhako/OS_Dreamfactory2.0.git
 3. After the app is created, goto the OpenShift web console and add mysql5.5 cartridge
 3b.[Optional: One can also add MongoDB cartridge, mongodb drivers are included in the installation script]
@@ -36,12 +36,15 @@ OpenShift account, goto http://openshift.redhat.com
 	cd ${OPENSHIFT_HOMEDIR}/app-root/runtime/repo/dreamfactory
 	
 	php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
-	
+		
 	php artisan dreamfactory:setup
+	
 	
 	<Enter your admin credentials>
 
-9. Your Dreamfactory2.0 is up and running, goto your app's url to use it.
+9.  Restart the Openshift Application [at OpenShift Online Portal]
+
+10, Your Dreamfactory2.0 is up and running, goto your app's url to use it.
 
 
 ### Note

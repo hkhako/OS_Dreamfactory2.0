@@ -84,6 +84,7 @@ phpize
 --enable-developer-flags \
 --with-mongodb-sasl=$SASL_PATH
 make -j8 all
+make install
 cp -f -v ./modules/*.* ../../srv/mongodb
 cd ..
 rm -f -r mongo
@@ -103,6 +104,7 @@ phpize
 --enable-developer-flags \
 --with-mongodb-sasl=$SASL_PATH
 make -j8 all
+make install
 cp -f -v ./modules/*.* ../../srv/mongodb
 cd..
 rm -f -r mongodb
@@ -116,12 +118,12 @@ cd v8
 git checkout tags/3.15.4
 make dependencies
 svn checkout --force http://gyp.googlecode.com/svn/trunk build/gyp --revision 1501
-make native library=shared
+#make native library=shared
+make -j8 all
 
 pushd ${OPENSHIFT_RUNTIME_DIR}/tmp/v8
-cp -f -v ./v8/include/v* ${OPENSHIFT_RUNTIME_DIR}/srv/v8js/include/
+cp -f -v ./include/v* ${OPENSHIFT_RUNTIME_DIR}/srv/v8js/include/
 
-cp -f -v ./
 cp -f -v ./out/native/lib.target/libv8.so ../../srv/v8js/lib/libv8.so
 
 
@@ -132,11 +134,12 @@ cd v8js-0.1.3
 phpize
 ./configure  --with-v8js=${OPENSHIFT_RUNTIME_DIR}/srv/v8js
 sed -i '1s/^/#define PHP_V8_VERSION "0.1.3" \n/' v8js.cc
-make
-make test
+make && make install
+
+
 cp ./modules/* ../../srv/v8js/
 
-
+sed -i '1s/^/#define PHP_V8_VERSION "0.1.3" \n/' ${OPENSHIFT_REPO_DIR}/conf/php5/php.ini
 
 # Build Composer
 export COMPOSER_HOME="${OPENSHIFT_DATA_DIR}.composer"
@@ -163,11 +166,11 @@ chmod -R 2775 storage
 
 chmod -R 2777 .env-dist
 sed -i '/DB_DRIVER=/ c\DB_DRIVER=mysql' .env-dist
-sed -i '/DB_HOST=/ c\DB_HOST='$OPENSHIFT_MYSQL_DB_HOST'' .env-dist
-sed -i '/DB_PORT=/ c\DB_PORT='$OPENSHIFT_MYSQL_DB_PORT'' .env-dist
-sed -i '/DB_USERNAME=/ c\DB_USERNAME='$OPENSHIFT_MYSQL_DB_USERNAME'' .env-dist
-sed -i '/DB_PASSWORD=/ c\DB_PASSWORD='$OPENSHIFT_MYSQL_DB_PASSWORD'' .env-dist
-sed -i '/DB_DATABASE=/ c\DB_DATABASE='$OPENSHIFT_APP_NAME'' .env-dist
+sed -i '/DB_HOST=/ c\DB_HOST='${OPENSHIFT_MYSQL_DB_HOST}'' .env-dist
+sed -i '/DB_PORT=/ c\DB_PORT='${OPENSHIFT_MYSQL_DB_PORT}'' .env-dist
+sed -i '/DB_USERNAME=/ c\DB_USERNAME='${OPENSHIFT_MYSQL_DB_USERNAME}'' .env-dist
+sed -i '/DB_PASSWORD=/ c\DB_PASSWORD='${OPENSHIFT_MYSQL_DB_PASSWORD}'' .env-dist
+sed -i '/DB_DATABASE=/ c\DB_DATABASE='${OPENSHIFT_APP_NAME}'' .env-dist
 
 cp .env-dist .env
 chmod -R 0600 .env-dist
@@ -181,5 +184,5 @@ chmod 2755 composer.json
 sed -i '/dist/ c\  "preferred-install": "source"' composer.json
 chmod 0700 composer.json
 php $OPENSHIFT_DATA_DIR/bin/composer install --no-dev
-
+php artisan key:generate
 

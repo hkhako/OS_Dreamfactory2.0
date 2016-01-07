@@ -40,7 +40,7 @@ X-Powered-By: /bin/bash
 <h2>Next...</h2>
 <p>"
 
-if [[ -x ${OPENSHIFT_RUNTIME_DIR}/bin/php-cgi ]]; then
+if [[ -x ${OPENSHIFT_RUNTIME_DIR}/repo/dreamfactory/.env ]]; then
 	echo "Test condition <a href=\"?phpinfo\">phpinfo</a>. "
 	echo "<script>setTimeout(function(){window.location.reload(true)},10000)</script>"
 	
